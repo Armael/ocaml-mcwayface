@@ -1,0 +1,7 @@
+(executables
+ ((names (hello))
+  (flags (:standard -safe-string))
+  (libraries
+   (wlroots))))
+
+(jbuild_version 1)

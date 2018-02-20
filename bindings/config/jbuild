@@ -1,0 +1,6 @@
+(executables
+ ((names (discover))
+  (flags (:standard -safe-string))
+  (libraries (base stdio configurator))))
+
+(jbuild_version 1)
