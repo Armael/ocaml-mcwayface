@@ -1,5 +1,3 @@
-module Ffi_bindings = Wlroots_bindings.Ffi_bindings
-
 let prefix = "wlroots_stub"
 
 let prologue = "
@@ -22,7 +20,7 @@ let () =
   | true, true ->
     failwith "Exactly one of -ml and -c must be specified"
   | true, false ->
-    Cstubs.write_ml Format.std_formatter ~prefix (module Ffi_bindings.Bindings)
+    Cstubs.write_ml Format.std_formatter ~prefix (module Bindings.Make)
   | false, true ->
     print_endline prologue;
-    Cstubs.write_c Format.std_formatter ~prefix (module Ffi_bindings.Bindings)
+    Cstubs.write_c Format.std_formatter ~prefix (module Bindings.Make)

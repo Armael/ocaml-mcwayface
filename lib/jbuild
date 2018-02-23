@@ -1,33 +1,27 @@
 (rule
  ((targets (ffi_generated.ml))
-  (deps (../stubgen/ffi_stubgen.exe))
+  (deps (../lib_gen/stubgen.exe))
   (action (bash "${<} -ml > ffi_generated.ml"))))
 
 (rule
  ((targets (ffi_generated_stubs.c))
-  (deps (../stubgen/ffi_stubgen.exe))
+  (deps (../lib_gen/stubgen.exe))
   (action (bash "${<} -c > ffi_generated_stubs.c"))))
-
-(rule
- ((targets (ffi_generated_types.ml))
-  (deps (../stubgen/ffi_ml_types_stubgen.exe))
-  (action (bash "${<} > ffi_generated_types.ml"))))
 
 (library
  ((name wlroots)
   (public_name wlroots)
   (modules (wlroots
-            ffi_generated_types
             ffi_generated))
   (c_names (ffi_generated_stubs))
   (c_flags ((:standard \ -Werror -pedantic -Wall -Wunused) -w
-            (:include ../bindings/wlroots-ccopt.sexp)
-            (:include ../bindings/wayland-server-ccopt.sexp)
-            (:include ../bindings/pixman-1-ccopt.sexp)))
+            (:include ../lib_gen/config/wlroots-ccopt.sexp)
+            (:include ../lib_gen/config/wayland-server-ccopt.sexp)
+            (:include ../lib_gen/config/pixman-1-ccopt.sexp)))
   (c_library_flags (:standard
-                   (:include ../bindings/wlroots-cclib.sexp)
-                   (:include ../bindings/wayland-server-cclib.sexp)
-                   (:include ../bindings/pixman-1-cclib.sexp)
+                   (:include ../lib_gen/config/wlroots-cclib.sexp)
+                   (:include ../lib_gen/config/wayland-server-cclib.sexp)
+                   (:include ../lib_gen/config/pixman-1-cclib.sexp)
                    ))
   (flags ((:standard -safe-string) -w -9-27-32-34))
   (libraries (wlroots_bindings

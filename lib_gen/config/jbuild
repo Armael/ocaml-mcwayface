@@ -1,3 +1,8 @@
+(executables
+ ((names (discover))
+  (flags (:standard -safe-string))
+  (libraries (base stdio configurator))))
+
 (rule
  ((targets (wlroots-ccopt.sexp
             wlroots-cclib.sexp
@@ -11,15 +16,7 @@
             pixman-1-cclib.sexp
             pixman-1-ccopt
             pixman-1-cclib))
-  (deps    (config/discover.exe))
+  (deps    (discover.exe))
   (action  (run ${<} -ocamlc ${OCAMLC}))))
-
-(library
- ((name wlroots_bindings)
-  (public_name wlroots.bindings)
-  (flags (:standard -safe-string))
-  (libraries (ctypes.stubs ctypes ctypes.foreign.threaded))
-;  (virtual_deps (conf-wlroots))
-  ))
 
 (jbuild_version 1)
