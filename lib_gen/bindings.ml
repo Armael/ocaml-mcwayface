@@ -84,14 +84,6 @@ struct
   let wl_display_destroy = foreign "wl_display_destroy"
       (wl_display_p @-> returning void)
 
-  let wlr_backend_p = Ctypes.ptr Backend.t
-
-  let wlr_backend_autocreate = foreign "wlr_backend_autocreate"
-      (wl_display_p @-> returning wlr_backend_p)
-
-  let wlr_backend_start = foreign "wlr_backend_start"
-      (wlr_backend_p @-> returning bool)
-
   (* wlr_output_mode *)
 
   let wlr_output_mode_p = ptr Output_mode.t
@@ -132,4 +124,11 @@ struct
 
   let wlr_backend_get_renderer = foreign "wlr_backend_get_renderer"
       (wlr_backend_p @-> returning wlr_renderer_p)
+
+  let wlr_backend_autocreate = foreign "wlr_backend_autocreate"
+      (wl_display_p @-> returning wlr_backend_p)
+
+  let wlr_backend_start = foreign "wlr_backend_start"
+      (wlr_backend_p @-> returning bool)
+
 end
