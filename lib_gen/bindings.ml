@@ -84,6 +84,12 @@ struct
   let wl_display_destroy = foreign "wl_display_destroy"
       (wl_display_p @-> returning void)
 
+  let wl_display_add_socket_auto = foreign "wl_display_add_socket_auto"
+      (wl_display_p @-> returning string)
+
+  let wl_display_init_shm = foreign "wl_display_init_shm"
+      (wl_display_p @-> returning int)
+
   (* wlr_output_mode *)
 
   let wlr_output_mode_p = ptr Output_mode.t
@@ -131,4 +137,49 @@ struct
   let wlr_backend_start = foreign "wlr_backend_start"
       (wlr_backend_p @-> returning bool)
 
+  (* wlr_gamma_control *)
+
+  (* TODO *)
+  let wlr_gamma_control_manager = ptr void
+
+  let wlr_gamma_control_manager_create = foreign "wlr_gamma_control_manager_create"
+      (wl_display_p @-> returning wlr_gamma_control_manager)
+
+  let wlr_gamma_control_manager_destroy = foreign "wlr_gamma_control_manager_destroy"
+      (wlr_gamma_control_manager @-> returning void)
+
+  (* wlr_screenshoter *)
+
+  (* TODO *)
+  let wlr_screenshooter_p = ptr void
+
+  let wlr_screenshooter_create = foreign "wlr_screenshooter_create"
+      (wl_display_p @-> returning wlr_screenshooter_p)
+
+  let wlr_screenshooter_destroy = foreign "wlr_screenshooter_destroy"
+      (wlr_screenshooter_p @-> returning void)
+
+  (* wlr_primary_selection *)
+
+  (* TODO *)
+  let wlr_primary_selection_device_manager_p = ptr void
+
+  let wlr_primary_selection_device_manager_create =
+    foreign "wlr_primary_selection_device_manager_create"
+      (wl_display_p @-> returning wlr_primary_selection_device_manager_p)
+
+  let wlr_primary_selection_device_manager_destroy =
+    foreign "wlr_primary_selection_device_manager_destroy"
+      (wlr_primary_selection_device_manager_p @-> returning void)
+
+  (* wlr_idle *)
+
+  (* TODO *)
+  let wlr_idle_p = ptr void
+
+  let wlr_idle_create = foreign "wlr_idle_create"
+      (wl_display_p @-> returning wlr_idle_p)
+
+  let wlr_idle_destroy = foreign "wlr_idle_destroy"
+      (wlr_idle_p @-> returning void)
 end

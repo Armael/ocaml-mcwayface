@@ -47,6 +47,8 @@ module Display : sig
   val get_event_loop : t -> Event_loop.t
   val run : t -> unit
   val destroy : t -> unit
+  val add_socket_auto : t -> string
+  val init_shm : t -> int
 end
 
 module Output : sig
@@ -103,4 +105,35 @@ module Backend : sig
   module Events : sig
     val new_output : t -> Output.t Signal.t
   end
+end
+
+module Gamma_control : sig
+  type t
+
+  module Manager : sig
+    type t
+    val create : Display.t -> t
+    val destroy : t -> unit
+  end
+end
+
+module Screenshooter : sig
+  type t
+
+  val create : Display.t -> t
+  val destroy : t -> unit
+end
+
+module Primary_selection : sig
+  module Device_manager : sig
+    type t
+    val create : Display.t -> t
+    val destroy : t -> unit
+  end
+end
+
+module Idle : sig
+  type t
+  val create : Display.t -> t
+  val destroy : t -> unit
 end

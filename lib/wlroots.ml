@@ -136,6 +136,8 @@ module Display = struct
 
   let run = Bindings.wl_display_run
   let destroy = Bindings.wl_display_destroy
+  let add_socket_auto = Bindings.wl_display_add_socket_auto
+  let init_shm = Bindings.wl_display_init_shm
 end
 
 module Output = struct
@@ -231,4 +233,38 @@ module Backend = struct
       typ = Output.t;
     }
   end
+end
+
+module Gamma_control = struct
+  type t = unit ptr
+
+  module Manager = struct
+    type t = unit ptr
+
+    let create = Bindings.wlr_gamma_control_manager_create
+    let destroy = Bindings.wlr_gamma_control_manager_destroy
+  end
+end
+
+module Screenshooter = struct
+  type t = unit ptr
+
+  let create = Bindings.wlr_screenshooter_create
+  let destroy = Bindings.wlr_screenshooter_destroy
+end
+
+module Primary_selection = struct
+  module Device_manager = struct
+    type t = unit ptr
+
+    let create = Bindings.wlr_primary_selection_device_manager_create
+    let destroy = Bindings.wlr_primary_selection_device_manager_destroy
+  end
+end
+
+module Idle = struct
+  type t  = unit ptr
+
+  let create = Bindings.wlr_idle_create
+  let destroy = Bindings.wlr_idle_destroy
 end

@@ -49,11 +49,22 @@ let () =
   let new_output = Listener.create (new_output_notify backend) in
   Signal.add (Backend.Events.new_output backend) new_output;
 
+  let socket = Display.add_socket_auto dpy in
+
   if not (Backend.start backend) then (
     Format.(fprintf err_formatter "Failed to start backend\n");
     Display.destroy dpy;
     exit 1
   );
+
+  Printf.printf "Running compositor on wayland display '%s'\n%!" socket;
+  Unix.putenv "WAYLAND_DISPLAY" socket;
+
+  let _ = Display.init_shm dpy in
+  let _ = Gamma_control.Manager.create dpy in
+  let _ = Screenshooter.create dpy in
+  let _ = Primary_selection.Device_manager.create dpy in
+  let _ = Idle.create dpy in
 
   Display.run dpy;
   Display.destroy dpy;
