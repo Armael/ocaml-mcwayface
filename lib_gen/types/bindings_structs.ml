@@ -10,4 +10,63 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let next = field t "next" (ptr t)
     let () = seal t
   end
+
+  module Wl_signal = struct
+    type t = [`wl_signal] Ctypes.structure
+    let t : t typ = structure "wl_signal"
+    let listener_list = field t "listener_list" Wl_list.t
+    let () = seal t
+  end
+
+  module Wl_listener = struct
+    type t = [`wl_listener] Ctypes.structure
+    let t : t typ = structure "wl_listener"
+
+    type wl_notify_func_t = t ptr -> unit ptr -> unit
+    let wl_notify_func_t : wl_notify_func_t typ =
+      lift_typ (Foreign.funptr (ptr t @-> ptr void @-> returning void))
+
+    let link = field t "link" Wl_list.t
+    let notify = field t "notify" wl_notify_func_t
+    let () = seal t
+  end
+
+  module Output_mode = struct
+    type t = [`output_mode] Ctypes.structure
+    let t : t typ = structure "wlr_output_mode"
+    let flags = field t "flags" uint32_t
+    let width = field t "width" int32_t
+    let height = field t "height" int32_t
+    let refresh = field t "refresh" int32_t
+    let link = field t "link" Wl_list.t
+    let () = seal t
+  end
+
+  module Output = struct
+    type t = [`output] Ctypes.structure
+    let t : t typ = structure "wlr_output"
+
+    let modes = field t "modes" Wl_list.t
+    let current_mode = field t "current_mode" (ptr Output_mode.t)
+    let events_destroy = field t "events.destroy" Wl_signal.t
+    let events_frame = field t "events.frame" Wl_signal.t
+
+    (* TODO *)
+    let () = seal t
+  end
+
+  module Renderer = struct
+    type t = [`renderer] Ctypes.structure
+    let t : t typ = structure "wlr_renderer"
+  end
+
+  module Backend = struct
+    type t = [`backend] Ctypes.structure
+    let t : t typ = structure "wlr_backend"
+    let impl = field t "impl" (ptr void)
+    let events_destroy = field t "events.destroy" Wl_signal.t
+    let events_new_input = field t "events.new_input" Wl_signal.t
+    let events_new_output = field t "events.new_output" Wl_signal.t
+    let () = seal t
+  end
 end
