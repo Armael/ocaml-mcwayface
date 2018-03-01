@@ -83,7 +83,7 @@ struct
 
   let wlr_output_mode_p = ptr Output_mode.t
 
-  let mode_of_link = foreign "mode_of_link"
+  let wlr_output_mode_of_link = foreign "wlr_output_mode_of_link"
       (wl_list_p @-> returning wlr_output_mode_p)
 
   (* wlr_output *)
