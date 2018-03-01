@@ -25,8 +25,13 @@ let output_frame_notify backend output =
   ()
 
 let new_output_notify backend output =
-  begin match Output.modes output with
-    | mode :: _ -> ignore (Output.set_mode output mode)
+  let modes = Output.modes output in
+  Printf.printf "Found %d output modes\n%!" (List.length modes);
+  begin match modes with
+    | mode :: _ ->
+      Printf.printf "Set mode: %ldx%ld\n%!"
+        (Output.Mode.width mode) (Output.Mode.height mode);
+      ignore (Output.set_mode output mode)
     | _ -> ()
   end;
 
