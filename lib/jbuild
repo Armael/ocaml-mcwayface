@@ -12,6 +12,7 @@
  ((name wlroots)
   (public_name wlroots)
   (modules (wlroots
+            utils sigs
             ffi_generated))
   (c_names (ffi_generated_stubs))
   (c_flags ((:standard \ -Werror -pedantic -Wall -Wunused) -w

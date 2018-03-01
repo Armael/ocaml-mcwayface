@@ -1,4 +1,5 @@
 open Wlroots
+open Wl
 
 type output_data = {
   destroy : Output.t Listener.t;
