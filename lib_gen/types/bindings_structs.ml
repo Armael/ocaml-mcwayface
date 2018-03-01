@@ -70,6 +70,20 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let () = seal t
   end
 
+  module Compositor = struct
+    type t = [`compositor] Ctypes.structure
+    let t : t typ = structure "wlr_compositor"
+    (* TODO *)
+    (* let () = seal t *)
+  end
+
+  module Xdg_shell_v6 = struct
+    type t = [`shell_v6] Ctypes.structure
+    let t : t typ = structure "wlr_xdg_shell_v6"
+    (* TODO *)
+    (* let () = seal t *)
+  end
+
   module Log = struct
     type importance =
       | Silent

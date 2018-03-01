@@ -95,6 +95,22 @@ module Backend : sig
   end
 end
 
+module Compositor : sig
+  type t
+  include Comparable0 with type t := t
+
+  val create : Wl.Display.t -> Renderer.t -> t
+  val destroy : t -> unit
+end
+
+module Xdg_shell_v6 : sig
+  type t
+  include Comparable0 with type t := t
+
+  val create : Wl.Display.t -> t
+  val destroy : t -> unit
+end
+
 module Gamma_control : sig
   type t
   include Comparable0 with type t := t

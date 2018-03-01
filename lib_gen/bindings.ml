@@ -129,6 +129,26 @@ struct
   let wlr_backend_start = foreign "wlr_backend_start"
       (wlr_backend_p @-> returning bool)
 
+  (* wlr_compositor *)
+
+  let wlr_compositor_p = ptr Compositor.t
+
+  let wlr_compositor_create = foreign "wlr_compositor_create"
+      (wl_display_p @-> wlr_renderer_p @-> returning wlr_compositor_p)
+
+  let wlr_compositor_destroy = foreign "wlr_compositor_destroy"
+      (wlr_compositor_p @-> returning void)
+
+  (* wlr_xdg_shell_v6 *)
+
+  let wlr_xdg_shell_v6_p = ptr Xdg_shell_v6.t
+
+  let wlr_xdg_shell_v6_create = foreign "wlr_xdg_shell_v6_create"
+      (wl_display_p @-> returning wlr_xdg_shell_v6_p)
+
+  let wlr_xdg_shell_v6_destroy = foreign "wlr_xdg_shell_v6_destroy"
+      (wlr_xdg_shell_v6_p @-> returning void)
+
   (* wlr_gamma_control *)
 
   (* TODO *)

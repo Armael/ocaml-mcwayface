@@ -73,6 +73,9 @@ let () =
   let _ = Primary_selection.Device_manager.create dpy in
   let _ = Idle.create dpy in
 
+  let _compositor = Compositor.create dpy (Backend.get_renderer backend) in
+  let _ = Xdg_shell_v6.create dpy in
+
   Display.run dpy;
   Display.destroy dpy;
   exit 0

@@ -171,6 +171,22 @@ module Backend = struct
   end
 end
 
+module Compositor = struct
+  type t = Types.Compositor.t ptr
+  include Ptr
+
+  let create = Bindings.wlr_compositor_create
+  let destroy = Bindings.wlr_compositor_destroy
+end
+
+module Xdg_shell_v6 = struct
+  type t = Types.Xdg_shell_v6.t ptr
+  include Ptr
+
+  let create = Bindings.wlr_xdg_shell_v6_create
+  let destroy = Bindings.wlr_xdg_shell_v6_destroy
+end
+
 module Gamma_control = struct
   type t = unit ptr
   include Ptr
