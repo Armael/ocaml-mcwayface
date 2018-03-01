@@ -3,4 +3,4 @@ _build
 *.merlin
 
 # It is useful to have this as a symlink to the library containing the bindings
-ocaml-wlroots
+wlroots-ocaml
