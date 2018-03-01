@@ -69,4 +69,26 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let events_new_output = field t "events.new_output" Wl_signal.t
     let () = seal t
   end
+
+  module Log = struct
+    type importance =
+      | Silent
+      | Error
+      | Info
+      | Debug
+
+    let _L_SILENT = constant "L_SILENT" int64_t
+    let _L_ERROR = constant "L_ERROR" int64_t
+    let _L_INFO = constant "L_INFO" int64_t
+    let _L_DEBUG = constant "L_DEBUG" int64_t
+    let _L_LAST = constant "L_LAST" int64_t
+
+    let importance : importance typ =
+      enum "log_importance_t" ~typedef:true [
+      Silent, _L_SILENT;
+      Error, _L_ERROR;
+      Info, _L_INFO;
+      Debug, _L_DEBUG;
+    ]
+  end
 end

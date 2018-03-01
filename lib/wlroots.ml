@@ -268,3 +268,11 @@ module Idle = struct
   let create = Bindings.wlr_idle_create
   let destroy = Bindings.wlr_idle_destroy
 end
+
+module Log = struct
+  include Types.Log
+
+  (* TODO: callback *)
+  let init importance =
+    Bindings.wlr_log_init importance null
+end

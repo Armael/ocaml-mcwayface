@@ -182,4 +182,13 @@ struct
 
   let wlr_idle_destroy = foreign "wlr_idle_destroy"
       (wlr_idle_p @-> returning void)
+
+  (* wlr_log *)
+
+  (* TODO *)
+  let log_callback_t = ptr void
+  let log_importance_t = Log.importance
+
+  let wlr_log_init = foreign "wlr_log_init"
+      (log_importance_t @-> log_callback_t @-> returning void)
 end

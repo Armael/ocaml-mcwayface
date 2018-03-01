@@ -137,3 +137,13 @@ module Idle : sig
   val create : Display.t -> t
   val destroy : t -> unit
 end
+
+module Log : sig
+  type importance =
+    | Silent
+    | Error
+    | Info
+    | Debug
+
+  val init : importance -> unit
+end

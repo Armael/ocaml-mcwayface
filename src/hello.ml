@@ -42,6 +42,7 @@ let new_output_notify backend output =
   ()
 
 let () =
+  Log.(init Debug);
   let dpy = Display.create () in
   let _event_loop = Display.get_event_loop dpy in
   let backend = Backend.autocreate dpy in

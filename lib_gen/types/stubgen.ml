@@ -3,6 +3,7 @@ let prologue = "
 #include <wayland-server.h>
 #include <wlr/backend.h>
 #include <wlr/render.h>
+#include <wlr/util/log.h>
 "
 
 let () =
