@@ -163,8 +163,7 @@ module Output = struct
 
   let modes (output : t) : Mode.t list =
     (output |-> Types.Output.modes)
-    |> Bindings.ocaml_of_wl_list
-      (fun p -> container_of p Types.Output_mode.link Types.Output_mode.t)
+    |> Bindings.ocaml_of_wl_list Bindings.mode_of_link
 
   let set_mode (output : t) (mode : Mode.t) =
     Bindings.wlr_output_set_mode output mode

@@ -6,17 +6,6 @@ module Types = Bindings_structs_lib.Bindings_structs.Make (Generated_types)
 module Utils = struct
   let ptr_eq p q = Ctypes.ptr_compare p q = 0
 
-  (* should be equivalent to [wl_container_of].
-
-     The arguments differ slightly. We do not need the [sample] argument
-     compared to the C macro, since our OCaml representation of pointers &
-     fields already carries some type information. On the other hand, we require
-     an extra argument [container_typ] carrying the description of the expected
-     container type. *)
-  let container_of p field container_typ =
-    p -@ (offsetof field)
-    |> coerce (ptr (field_type field)) (ptr container_typ)
-
   let ( |->> ) s f = !@ (s |-> f)
 end
 
@@ -93,6 +82,9 @@ struct
   (* wlr_output_mode *)
 
   let wlr_output_mode_p = ptr Output_mode.t
+
+  let mode_of_link = foreign "mode_of_link"
+      (wl_list_p @-> returning wlr_output_mode_p)
 
   (* wlr_output *)
 
