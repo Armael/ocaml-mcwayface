@@ -87,6 +87,11 @@ module Wl = struct
     let add_socket_auto = Bindings.wl_display_add_socket_auto
     let init_shm = Bindings.wl_display_init_shm
   end
+
+  module Resource = struct
+    type t = Types.Wl_resource.t ptr
+    include Ptr
+  end
 end
 
 module Output = struct
@@ -177,6 +182,9 @@ module Compositor = struct
 
   let create = Bindings.wlr_compositor_create
   let destroy = Bindings.wlr_compositor_destroy
+  let surfaces comp =
+    (comp |-> Types.Compositor.surfaces)
+    |> Bindings.ocaml_of_wl_list Bindings.wl_resource_of_link
 end
 
 module Xdg_shell_v6 = struct

@@ -45,6 +45,11 @@ module Wl : sig
     val add_socket_auto : t -> string
     val init_shm : t -> int
   end
+
+  module Resource : sig
+    type t
+    include Comparable0 with type t := t
+  end
 end
 
 module Output : sig
@@ -101,6 +106,7 @@ module Compositor : sig
 
   val create : Wl.Display.t -> Renderer.t -> t
   val destroy : t -> unit
+  val surfaces : t -> Wl.Resource.t list
 end
 
 module Xdg_shell_v6 : sig

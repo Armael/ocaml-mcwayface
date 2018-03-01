@@ -31,6 +31,14 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let () = seal t
   end
 
+  module Wl_resource = struct
+    type t = [`wl_resource] Ctypes.structure
+    let t : t typ = structure "wl_resource"
+    let link = field t "link" Wl_list.t
+    (* TODO *)
+    let () = seal t
+  end
+
   module Output_mode = struct
     type t = [`output_mode] Ctypes.structure
     let t : t typ = structure "wlr_output_mode"
@@ -73,8 +81,10 @@ module Make (S : Cstubs_structs.TYPE) = struct
   module Compositor = struct
     type t = [`compositor] Ctypes.structure
     let t : t typ = structure "wlr_compositor"
+    let surfaces = field t "surfaces" Wl_list.t
+
     (* TODO *)
-    (* let () = seal t *)
+    let () = seal t
   end
 
   module Xdg_shell_v6 = struct

@@ -79,6 +79,13 @@ struct
   let wl_display_init_shm = foreign "wl_display_init_shm"
       (wl_display_p @-> returning int)
 
+  (* wl_resource *)
+
+  let wl_resource_p = ptr Wl_resource.t
+
+  let wl_resource_of_link = foreign "wl_resource_of_link"
+      (wl_list_p @-> returning wl_resource_p)
+
   (* wlr_output_mode *)
 
   let wlr_output_mode_p = ptr Output_mode.t
