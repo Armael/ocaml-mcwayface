@@ -1,6 +1,8 @@
 open Wlroots
 open Wl
 
+(* global state *)
+
 type output_data = {
   destroy : Output.t Listener.t;
   frame : Output.t Listener.t;
@@ -9,6 +11,10 @@ type output_data = {
 module OH = Hashtbl.Make (Output)
 
 let outputs : output_data OH.t = OH.create 15
+
+let compositor : Compositor.t option ref = ref None
+
+(* ---- *)
 
 let output_destroy_notify output =
   let data = OH.find outputs output in
@@ -20,7 +26,32 @@ let output_frame_notify backend output =
   let renderer = Backend.get_renderer backend in
   Output.make_current output |> ignore;
   Renderer.begin_ renderer output;
-  Renderer.clear renderer (1., 0., 0., 1.);
+
+  Renderer.clear renderer (0.4, 0.4, 0.4, 1.);
+
+  (* This is ugly (as well as the [compositor] reference; hopefully
+     I'll find a more idiomatic way of doing that *)
+  let comp = match !compositor with Some c -> c | None -> assert false in
+
+  List.iter (fun resource ->
+    let surface = Surface.from_resource resource in
+    if Surface.has_buffer surface then (
+      let surface_state = Surface.current surface in
+      let render_box = Box.{
+        x = 20; y = 20;
+        width = Surface.State.width surface_state;
+        height = Surface.State.height surface_state;
+      } in
+      let matrix = Matrix.project_box render_box
+          (Surface.State.transform surface_state) 0.
+          (Output.transform_matrix output)
+      in
+      let _ : bool = Renderer.render_with_matrix renderer
+          (Surface.texture surface) matrix 1.0 in
+      Surface.send_frame_done surface (Mtime_clock.now ())
+    )
+  ) (Compositor.surfaces comp);
+
   Output.swap_buffers output |> ignore;
   Renderer.end_ renderer;
   ()
@@ -73,7 +104,7 @@ let () =
   let _ = Primary_selection.Device_manager.create dpy in
   let _ = Idle.create dpy in
 
-  let _compositor = Compositor.create dpy (Backend.get_renderer backend) in
+  compositor := Some (Compositor.create dpy (Backend.get_renderer backend));
   let _ = Xdg_shell_v6.create dpy in
 
   Display.run dpy;
