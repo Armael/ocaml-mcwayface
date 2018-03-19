@@ -12,8 +12,6 @@ module OH = Hashtbl.Make (Output)
 
 let outputs : output_data OH.t = OH.create 15
 
-let compositor : Compositor.t option ref = ref None
-
 (* ---- *)
 
 let output_destroy_notify output =
@@ -22,16 +20,12 @@ let output_destroy_notify output =
   Listener.detach data.destroy;
   Listener.detach data.frame
 
-let output_frame_notify backend output =
+let output_frame_notify comp backend output =
   let renderer = Backend.get_renderer backend in
   Output.make_current output |> ignore;
   Renderer.begin_ renderer output;
 
   Renderer.clear renderer (0.4, 0.4, 0.4, 1.);
-
-  (* This is ugly (as well as the [compositor] reference; hopefully
-     I'll find a more idiomatic way of doing that *)
-  let comp = match !compositor with Some c -> c | None -> assert false in
 
   List.iter (fun resource ->
     let surface = Surface.from_resource resource in
@@ -56,7 +50,7 @@ let output_frame_notify backend output =
   Renderer.end_ renderer;
   ()
 
-let new_output_notify backend output =
+let new_output_notify comp backend output =
   let modes = Output.modes output in
   Printf.printf "Found %d output modes\n%!" (List.length modes);
   begin match modes with
@@ -69,7 +63,7 @@ let new_output_notify backend output =
 
   let output_data = {
     destroy = Listener.create output_destroy_notify;
-    frame = Listener.create (output_frame_notify backend);
+    frame = Listener.create (output_frame_notify comp backend);
   }
   in
   OH.add outputs output output_data;
@@ -84,7 +78,8 @@ let () =
   let _event_loop = Display.get_event_loop dpy in
   let backend = Backend.autocreate dpy in
 
-  let new_output = Listener.create (new_output_notify backend) in
+  let comp = Compositor.create dpy (Backend.get_renderer backend) in
+  let new_output = Listener.create (new_output_notify comp backend) in
   Signal.add (Backend.Events.new_output backend) new_output;
 
   let socket = Display.add_socket_auto dpy in
@@ -104,7 +99,6 @@ let () =
   let _ = Primary_selection.Device_manager.create dpy in
   let _ = Idle.create dpy in
 
-  compositor := Some (Compositor.create dpy (Backend.get_renderer backend));
   let _ = Xdg_shell_v6.create dpy in
 
   Display.run dpy;
