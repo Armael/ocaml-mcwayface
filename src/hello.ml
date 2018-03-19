@@ -20,8 +20,8 @@ let output_destroy_notify output =
   Listener.detach data.destroy;
   Listener.detach data.frame
 
-let output_frame_notify comp backend output =
-  let renderer = Backend.get_renderer backend in
+let output_frame_notify comp output =
+  let renderer = Compositor.renderer comp in
   Output.make_current output |> ignore;
   Renderer.begin_ renderer output;
 
@@ -50,7 +50,7 @@ let output_frame_notify comp backend output =
   Renderer.end_ renderer;
   ()
 
-let new_output_notify comp backend output =
+let new_output_notify comp output =
   let modes = Output.modes output in
   Printf.printf "Found %d output modes\n%!" (List.length modes);
   begin match modes with
@@ -63,7 +63,7 @@ let new_output_notify comp backend output =
 
   let output_data = {
     destroy = Listener.create output_destroy_notify;
-    frame = Listener.create (output_frame_notify comp backend);
+    frame = Listener.create (output_frame_notify comp);
   }
   in
   OH.add outputs output output_data;
@@ -74,33 +74,19 @@ let new_output_notify comp backend output =
 
 let () =
   Log.(init Debug);
-  let dpy = Display.create () in
-  let _event_loop = Display.get_event_loop dpy in
-  let backend = Backend.autocreate dpy in
+  let comp = Compositor.create () in
 
-  let comp = Compositor.create dpy (Backend.get_renderer backend) in
-  let new_output = Listener.create (new_output_notify comp backend) in
-  Signal.add (Backend.Events.new_output backend) new_output;
+  let new_output = Listener.create (new_output_notify comp) in
+  Signal.add (Compositor.Events.new_output comp) new_output;
 
-  let socket = Display.add_socket_auto dpy in
+  let dpy = Compositor.display comp in
 
-  if not (Backend.start backend) then (
-    Format.(fprintf err_formatter "Failed to start backend\n");
-    Display.destroy dpy;
-    exit 1
-  );
-
-  Printf.printf "Running compositor on wayland display '%s'\n%!" socket;
-  Unix.putenv "WAYLAND_DISPLAY" socket;
-
-  let _ = Display.init_shm dpy in
   let _ = Gamma_control.Manager.create dpy in
   let _ = Screenshooter.create dpy in
   let _ = Primary_selection.Device_manager.create dpy in
   let _ = Idle.create dpy in
-
   let _ = Xdg_shell_v6.create dpy in
 
-  Display.run dpy;
-  Display.destroy dpy;
+  Compositor.run comp;
+  Compositor.terminate comp;
   exit 0
