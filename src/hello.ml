@@ -58,15 +58,6 @@ let () =
       ~outputs_handler:(Compositor.Outputs_handler (new outputs_handler))
       ()
   in
-
-  let dpy = Compositor.display comp in
-
-  let _ = Gamma_control.Manager.create dpy in
-  let _ = Screenshooter.create dpy in
-  let _ = Primary_selection.Device_manager.create dpy in
-  let _ = Idle.create dpy in
-  let _ = Xdg_shell_v6.create dpy in
-
   Compositor.run comp;
   Compositor.terminate comp;
   exit 0
