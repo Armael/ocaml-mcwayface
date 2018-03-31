@@ -45,7 +45,7 @@ let () =
   Log.(init Debug);
   let comp = Compositor.create () in
   Main.run ~state:() ~handler:(function
-    | Compositor.Output_added o -> output_added comp o
+    | Compositor.New_output o -> output_added comp o
     | Output.Frame o -> output_frame comp o
     | _ -> fun _ -> ()
   ) comp;
